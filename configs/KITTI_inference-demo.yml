@@ -18,8 +18,8 @@ inference: True
 ## used directories
 dirs:
     # output directory
-    output: 'YOUR_OURPUT_DIR' 
-    ckpt: 'YOUR_PRETRAINED_DIR' 
+    output: 'model-out' 
+    ckpt: 'models' 
     load_prediction_file: '../resources/D4LCN/data'
 
 ## CUDNN settings
@@ -41,7 +41,7 @@ dataset:
         coef: [0.332, 0.667]
     # do some pre-processing
     pre-process: False
-    root: 'YOUR_KITTI_DIR'
+    root: 'data/kitti_data'
     # augmentation parameters
     scaling_factor: 0.2
     rotation_factor: 30. # degrees
