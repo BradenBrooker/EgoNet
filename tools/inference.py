@@ -260,6 +260,9 @@ def main():
     # Initialize Ego-Net and load the pre-trained checkpoint
     model = EgoNet(cfgs, pre_trained=True)
     model = model.eval().cuda()
+    # NOTE: Uncomment next 2 lines if you want to save the model's weights
+    # torch.save(model.state_dict(), "egonet_pretrained.pth")
+    # print("Model saved as 'egonet_pretrained.pth'")
     
     # perform inference and save the (updated) predictions
     inference(dataset_inf, model, results, cfgs)       
