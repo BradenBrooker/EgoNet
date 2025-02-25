@@ -21,8 +21,8 @@ conf_thres: 0.1 # discard low score boxes
 ## used directories
 dirs:
     # output directory
-    output: 'YOUR_OURPUT_DIR' 
-    ckpt: 'YOUR_PRETRAINED_DIR' 
+    output: 'model-out' 
+    ckpt: '../models' 
     # raw detection results on test set by using RRC-Net
     load_prediction_file: '../resources/test_boxes'
 
@@ -45,7 +45,7 @@ dataset:
         coef: [0.332, 0.667]
     # do some pre-processing
     pre-process: False
-    root: 'YOUR_KITTI_DIR'
+    root: '../kitti_data'
     # augmentation parameters
     scaling_factor: 0.2
     rotation_factor: 30. # degrees
