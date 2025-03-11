@@ -9,6 +9,9 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
+import rospy
+from geometry_msgs.msg import Point
+
 import libs.visualization.points as vp
 
 def plot_2d_objects(img_path, record, color_dict):
@@ -75,10 +78,34 @@ def plot_3d_objects(prediction, target, pose_vecs_gt, record, color):
     else:
         raise NotImplementedError
     if 'plots' in record and 'ax3d' in record['plots']:
+        print("IF ****************************************")
         # update drawing
         ax = record['plots']['ax3d']
         ax = vp.plot_scene_3dbox(p3d_pred, p3d_gt, ax=ax, color=color)
+        #  NOTE: Try Here
+        #  p3d_pred -> Predicted boxes???
+        #  p3d_gt -> Ground Truth boxes???
+
+        # rospy.init_node('kpts_publisher', anonymous=True)
+        # pub = rospy.Publisher('/kpts_3d', Point, queue_size=10)
+        # print("3D Keypoints (Predicted):")
+        # for kpts_3d in p3d_pred:
+        #     print(kpts_3d)
+        #     print(type(kpts_3d))
+            # for pt in kpts_3d:  
+            #     p = Point()
+            #     p.x, p.y, p.z = pt
+            #     rospy.loginfo("Publishing 3D Point at x: %f, y: %f, z: %f", p.x, p.y, p.z)
+            #     pub.publish(p)
+            #     rospy.sleep(0.1)
+
+            # # Check if the node is shutting down
+            # if rospy.is_shutdown():
+            #     break
+
+
     elif 'plots' in record:
+        print("ELIF ****************************************")
         # plotting a set of 3D boxes
         ax = vp.plot_scene_3dbox(p3d_pred, p3d_gt, color=color)
         ax.set_title("GT: black w/o Ego-Net: magenta w/ Ego-Net: red/yellow")
@@ -99,4 +126,24 @@ def plot_3d_objects(prediction, target, pose_vecs_gt, record, color):
             pose_vecs_before[idx][0:3] = record['raw_txt_format'][idx]['locations']
             pose_vecs_before[idx][4] = record['raw_txt_format'][idx]['rot_y']
         vp.draw_pose_vecs(ax, pose_vecs_before, color='m')
+
+    # # Print 3D keypoints before plotting
+    # rospy.init_node('kpts_publisher', anonymous=True)
+    # pub = rospy.Publisher('/kpts_3d', Point, queue_size=10)
+    # print("3D Keypoints (Predicted):")
+    # # for kpts_3d in p3d_pred:
+    # for kpts_3d in translation:
+    #     # print(kpts_3d)
+    #     # print(type(kpts_3d))
+    #     for pt in kpts_3d:  
+    #         p = Point()
+    #         p.x, p.y, p.z = pt
+    #         rospy.loginfo("Publishing 3D Point at x: %f, y: %f, z: %f", p.x, p.y, p.z)
+    #         pub.publish(p)
+    #         rospy.sleep(0.1)
+
+    #     # Check if the node is shutting down
+    #     if rospy.is_shutdown():
+    #         break
+
     return record

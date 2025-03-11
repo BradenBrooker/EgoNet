@@ -11,6 +11,9 @@ import numpy as np
 import cv2
 import math
 
+import rospy
+from geometry_msgs.msg import Point
+
 from scipy.spatial.transform import Rotation
 from os.path import join as pjoin
 
@@ -33,6 +36,9 @@ class EgoNet(nn.Module):
         """
         Initialization method of Ego-Net.
         """
+        rospy.init_node('kpts_publisher', anonymous=True)
+        self.pub = rospy.Publisher('/kpts_3d', Point, queue_size=10)
+
         super(EgoNet, self).__init__()
         # initialize a fully-convolutional heatmap regression model
         # this model corresponds to H and C in Equation (2)
@@ -357,9 +363,54 @@ class EgoNet(nn.Module):
         if visualize:
             # plot 2D predictions 
             vego.plot_2d_objects(img_path, record, color_dict)
+
+        # Print 2D keypoints before plotting
+        # print("2D Keypoints (Predicted):")
+        # for kpts_2d in record['kpts_2d_pred']:
+            # print(kpts_2d.tolist())
+            # print(type(kpts_2d))
+        # Print 3D keypoints before plotting
+        # print("3D Keypoints (Predicted):")
+        # for kpts_3d in record['kpts_3d_pred']:
+        #     print(kpts_3d)
+        #     # print(type(kpts_3d))
+        #     for pt in kpts_3d:  # Assuming kpts_3d contains sublists of [x, y, z]
+        #         p = Point()
+        #         p.x, p.y, p.z = pt
+        #         rospy.loginfo("Publishing 3D keypoints")
+        #         self.pub.publish(p)
+        #         # rospy.sleep(0.1)
+
+        #     # Check if the node is shutting down
+        #     if rospy.is_shutdown():
+        #         break
+
+            
+
         # plot 3d bounding boxes
         all_kpts_2d = np.concatenate(record['kpts_2d_pred'])
         all_kpts_3d_pred = record['kpts_3d_pred'].reshape(len(record['kpts_3d_pred']), -1)
+
+        # print("3D Keypoints (Predicted):")
+        # for kpts_3d in all_kpts_3d_pred:
+        #     print(kpts_3d)
+        #     # print(type(kpts_3d))
+        #     for pt in kpts_3d:  # Assuming kpts_3d contains sublists of [x, y, z]
+        #         p = Point()
+        #         p.x, p.y, p.z = pt
+        #         rospy.loginfo("Publishing 3D keypoints")
+        #         self.pub.publish(p)
+        #         # rospy.sleep(0.1)
+
+        #     # Check if the node is shutting down
+        #     if rospy.is_shutdown():
+        #         break
+
+        # Print 3D keypoints before plotting
+        # print("3D Keypoints (Predicted):")
+        # print(all_kpts_3d_pred)
+        # print(type(all_kpts_3d_pred))
+
         if 'kpts_3d_gt' in record:
             all_kpts_3d_gt = record['kpts_3d_gt']
             all_pose_vecs_gt = record['pose_vecs_gt']

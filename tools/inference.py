@@ -215,9 +215,11 @@ def generate_empty_file(output_dir, label_dir):
 def main():
     # experiment configurations
     cfgs = parse.parse_args()
+    print(cfgs)
     
     # logging
-    logger, final_output_dir = liblogger.get_logger(cfgs)   
+    logger, final_output_dir = liblogger.get_logger(cfgs)  
+    print("Output Dir: "+final_output_dir) 
     
     # save a copy of the experiment configuration
     save_cfg_path = os.path.join(final_output_dir, 'saved_config.yml')
@@ -240,6 +242,7 @@ def main():
     
     # which split to show
     split = data_cfgs['split'] # default: KITTI val split
+    print("Split: "+split)
     dataset_inf = libkitti.get_dataset(cfgs, logger, split)
     
     # set the dataset to inference mode

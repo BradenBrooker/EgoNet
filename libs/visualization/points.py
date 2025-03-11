@@ -5,6 +5,9 @@ Author: Shichao Li
 Contact: nicholas.li@connect.ust.hk
 """
 
+import rospy
+from geometry_msgs.msg import Point
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -251,6 +254,28 @@ def plot_scene_3dbox(points_pred, points_gt=None, ax=None, color='r'):
     preds = points_pred.copy()
     # add the root translation
     preds[:,1:,] = preds[:,1:,] + preds[:,[0],]
+    print("PREDS ***************************")
+
+    rospy.init_node('kpts_publisher', anonymous=True)
+    pub = rospy.Publisher('/kpts_3d', Point, queue_size=10)
+    print("3D Keypoints (Predicted):")
+    for kpts_3d in preds:
+        print(kpts_3d)
+        print(type(kpts_3d))
+        for pt in kpts_3d:  
+            p = Point()
+            p.x, p.y, p.z = pt
+            rospy.loginfo("Publishing 3D Point at x: %f, y: %f, z: %f", p.x, p.y, p.z)
+            pub.publish(p)
+            rospy.sleep(0.1)
+
+        # Check if the node is shutting down
+        if rospy.is_shutdown():
+            break
+
+
+
+
     if points_gt is not None:
         gts = points_gt.copy() 
         gts[:,1:,] = gts[:,1:,] + gts[:,[0],]
